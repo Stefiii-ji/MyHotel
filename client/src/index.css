@@ -1,0 +1,221 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #24231f;
+  background: #f8f6f1;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+
+  --color-ink: #24231f;
+  --color-muted: #77756e;
+  --color-paper: #f8f6f1;
+  --color-coral: #ef6848;
+  --color-olive: #65735d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+::selection {
+  color: #fffaf4;
+  background: var(--color-coral);
+}
+
+.page-shell {
+  width: min(100% - 3rem, 1180px);
+  margin-inline: auto;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 0.92fr);
+  gap: clamp(2rem, 7vw, 6rem);
+  align-items: center;
+}
+
+.stay-visual {
+  position: relative;
+  min-height: 440px;
+  overflow: hidden;
+  border: 1px solid rgb(36 35 31 / 8%);
+  border-radius: 2rem;
+  background:
+    radial-gradient(ellipse at 68% 28%, rgb(255 224 176 / 76%), transparent 29%),
+    linear-gradient(145deg, #e8e2d4 0%, #d2d6c6 52%, #a9b5a0 100%);
+  box-shadow: 0 28px 80px rgb(65 68 54 / 12%);
+}
+
+.stay-sun {
+  position: absolute;
+  top: 54px;
+  right: 68px;
+  width: 90px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #f8d7a1;
+  box-shadow: 0 0 60px rgb(255 225 176 / 70%);
+}
+
+.stay-horizon {
+  position: absolute;
+  right: -12%;
+  bottom: 0;
+  left: -12%;
+  height: 45%;
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(135deg, #87957d, #627363);
+  transform: rotate(-5deg);
+}
+
+.stay-horizon::before,
+.stay-horizon::after {
+  position: absolute;
+  top: -38px;
+  width: 58%;
+  height: 95%;
+  border-radius: 50% 50% 0 0;
+  background: #9da995;
+  content: "";
+}
+
+.stay-horizon::before {
+  left: -7%;
+  transform: rotate(12deg);
+}
+
+.stay-horizon::after {
+  right: -5%;
+  top: -65px;
+  background: #778775;
+  transform: rotate(-10deg);
+}
+
+.stay-building {
+  position: absolute;
+  z-index: 1;
+  right: 19%;
+  bottom: 18%;
+  width: 43%;
+  height: 40%;
+  border: 8px solid #f4ede0;
+  border-bottom-width: 0;
+  border-radius: 48% 48% 0 0;
+  background: #c78762;
+  box-shadow: 17px 11px 0 rgb(78 84 67 / 13%);
+}
+
+.stay-building::before {
+  position: absolute;
+  top: 23%;
+  right: 16%;
+  left: 16%;
+  height: 41%;
+  border: 5px solid #f4ede0;
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(180deg, #9fb3ac, #708b82);
+  content: "";
+}
+
+.stay-building::after {
+  position: absolute;
+  right: 42%;
+  bottom: 0;
+  left: 42%;
+  height: 27%;
+  border-radius: 12px 12px 0 0;
+  background: #f4ede0;
+  content: "";
+}
+
+.visual-label {
+  position: absolute;
+  z-index: 2;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid rgb(255 255 255 / 55%);
+  border-radius: 1.1rem;
+  background: rgb(255 253 248 / 82%);
+  backdrop-filter: blur(12px);
+}
+
+.step-number {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(36 35 31 / 10%);
+  border-radius: 50%;
+  background: #fffdf8;
+  color: var(--color-coral);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+@media (max-width: 800px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stay-visual {
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page-shell {
+    width: min(100% - 2rem, 1180px);
+  }
+
+  .stay-visual {
+    min-height: 320px;
+    border-radius: 1.5rem;
+  }
+
+  .stay-sun {
+    top: 38px;
+    right: 43px;
+    width: 68px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
