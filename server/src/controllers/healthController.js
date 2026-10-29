@@ -8,3 +8,13 @@ export function createHealthHandler({ isDatabaseReady }) {
     });
   };
 }
+
+export function createReadinessHandler({ isDatabaseReady }) {
+  return function getReadiness(_request, response) {
+    const databaseReady = isDatabaseReady();
+    response.status(databaseReady ? 200 : 503).json({
+      status: databaseReady ? 'ready' : 'unavailable',
+      database: databaseReady ? 'ready' : 'unavailable',
+    });
+  };
+}

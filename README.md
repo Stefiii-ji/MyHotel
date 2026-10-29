@@ -1,6 +1,6 @@
 # StaySwipe
 
-StaySwipe is an early-stage hotel discovery and group trip-planning project for Mumbai and Navi Mumbai. Hotel discovery reads imported accommodation records from OpenStreetMap (OSM) and MongoDB. OSM coverage and tags vary; ratings and customer reviews are not supplied as verified data. Optional provider offers may be unavailable when credentials or a verified inventory mapping are missing. StaySwipe is not a booking service. Group creation, invitation-based guest membership, and mutual hotel matching are available; permanent accounts are not implemented.
+StaySwipe is a hotel discovery and group trip-planning application for Mumbai and Navi Mumbai. It supports browsing imported accommodation records, creating private invitation-based groups with guest membership, independent group swipes, and mutual hotel matches. Hotel discovery reads records from MongoDB; OpenStreetMap (OSM) coverage and tags vary, and ratings and customer reviews are not supplied as verified data. Optional provider offers may be unavailable when credentials or a verified inventory mapping are missing. StaySwipe is not a booking service, and permanent accounts are not used.
 
 ## Requirements
 
@@ -40,7 +40,7 @@ npm run dev
 
 `npm run dev` starts the Vite development server. Open the local URL it prints (normally [http://localhost:5173](http://localhost:5173)) in your browser.
 
-The client API base URL is `VITE_API_BASE_URL` in `client/.env`. This is a public frontend setting, so never put secrets or private keys in a `VITE_` variable. The default is `http://localhost:5000/api`.
+The client API base URL is `VITE_API_BASE_URL` in `client/.env`. This is a public frontend setting, so never put secrets or private keys in a `VITE_` variable. Development defaults to `http://localhost:5000/api`; production builds require a configured public HTTPS API URL and reject localhost values.
 
 ## Hotel discovery
 
@@ -206,6 +206,9 @@ With the API terminal still running, open [http://localhost:5000/api/health](htt
 The timestamp will show the time of your request. `status: "ok"` reports API
 liveness; `database: "unavailable"` means MongoDB is not ready, so
 database-backed requests may return 503 even while the API process is alive.
+Use `GET /api/health/ready` for a deployment readiness probe: it returns HTTP
+503 until MongoDB is connected and HTTP 200 when database-backed requests can
+be served.
 
 ## Production builds
 
@@ -214,9 +217,13 @@ Build the client from its own directory:
 ```powershell
 cd "D:\My Code\stayswipe\client"
 npm test
+$env:VITE_API_BASE_URL = "https://<backend-host>/api"
 npm run build
 npm run preview
 ```
+
+Replace the placeholder with the backend URL before building. Production builds fail when the API URL is missing, non-HTTPS, or points to localhost.
+For local production-build checks, set `VITE_API_BASE_URL` to a non-production test endpoint and do not deploy that build.
 
 Run the API from its directory with:
 
@@ -273,7 +280,9 @@ until real credentials are supplied directly to the host's secret manager.
 
 The client also accepts `VITE_API_BASE_URL`, set at build time to the backend
 API base URL, for example `https://<backend-host>/api`. It contains no secret.
-If unset, the client uses `http://localhost:5000/api`.
+Development uses `http://localhost:5000/api` when unset. Production builds
+require an absolute public HTTPS URL and reject localhost values or embedded
+credentials.
 
 ### Running locally
 
@@ -291,9 +300,10 @@ cd "D:\My Code\stayswipe\client"
 npm run dev
 ```
 
-The backend retries initial MongoDB connection failures with backoff and exposes
-`GET /api/health` for liveness and database readiness. It also handles SIGINT
-and SIGTERM by closing the HTTP server and disconnecting MongoDB.
+The backend retries initial MongoDB connection failures with backoff, exposes
+`GET /api/health` for liveness and `GET /api/health/ready` for database
+readiness, and handles SIGINT and SIGTERM by closing the HTTP server and
+disconnecting MongoDB.
 
 ### Deployment preparation
 
@@ -302,28 +312,33 @@ and SIGTERM by closing the HTTP server and disconnecting MongoDB.
    account terms, and costs; none is configured or deployed by this repository.
 2. Set `VITE_API_BASE_URL=https://<backend-host>/api` in the frontend build
    environment, then build with `npm ci` and `npm run build` in `client/`.
-   Publish the resulting `client/dist/` directory. The client must be rebuilt
-   when its API base URL changes.
-3. Configure the backend host to install `server/package-lock.json` dependencies
+   Production builds reject missing, non-HTTPS, and localhost API URLs. Publish
+   the resulting `client/dist/` directory. The client must be rebuilt when its
+   API base URL changes.
+3. Configure the selected static host to serve `index.html` for unmatched
+   application routes so direct visits and browser refreshes on paths such as
+   `/discover` and `/groups/<id>` work. Host-specific rewrite syntax depends on
+   the provider; no provider-specific deployment configuration is included.
+4. Configure the backend host to install `server/package-lock.json` dependencies
    and run `npm start` from `server/`. The server listens on `process.env.PORT`
    and does not serve the frontend build.
-4. Configure backend secrets in the host's environment/secret manager:
+5. Configure backend secrets in the host's environment/secret manager:
    `NODE_ENV=production`, `CLIENT_ORIGIN=https://<frontend-domain>`,
    `MONGODB_URI=<Atlas connection string>`, and the host-provided `PORT`.
    Configure Atlas network access for the backend's real outbound IPs where the
    hosting provider supports stable egress. Never put backend secrets in
    frontend build variables.
-5. Serve the frontend and API over HTTPS. Production membership cookies are
+6. Serve the frontend and API over HTTPS. Production membership cookies are
    `HttpOnly`, `Secure`, and `SameSite=None` for cross-origin frontend/API use.
    Browser third-party-cookie restrictions can still affect cross-site
    deployments; a same-site frontend and API domain or an appropriately
    configured same-site reverse proxy may be needed. CORS is restricted to the
    exact `CLIENT_ORIGIN`; do not use `*`.
-6. Configure the host's health check to call `/api/health`. A response with
-   `database: "unavailable"` is live but not ready for database-backed traffic.
-   Review host logs for safe connection diagnostics and configure log retention
-   and access according to your operational needs.
-7. Leave hotel offers disabled (`HOTEL_OFFERS_PROVIDER=none`) unless a valid
+7. Configure the host's liveness check to call `/api/health` and its readiness
+   check to call `/api/health/ready`. Readiness returns HTTP 503 when MongoDB
+   is unavailable. Review host logs for safe connection diagnostics and
+   configure log retention and access according to your operational needs.
+8. Leave hotel offers disabled (`HOTEL_OFFERS_PROVIDER=none`) unless a valid
    provider account, credentials, and reliable inventory mapping are available.
    Only then configure provider credentials server-side and select the intended
    test or production mode. Test mode uses the provider's test endpoint and

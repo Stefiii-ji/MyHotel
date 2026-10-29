@@ -71,15 +71,12 @@ export default function HomePage() {
               className="inline-flex items-center gap-3 rounded-full border border-[#24231f]/15 px-5 py-3.5 text-sm font-semibold transition-colors duration-200 hover:border-[#24231f]/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#514e46]"
               href="#how-it-works"
             >
-              See how it will work
+              See how it works
               <span aria-hidden="true" className="text-lg leading-none">
                 ↗
               </span>
             </a>
 
-            <span className="text-sm text-[#77756e]">
-              Currently in the works
-            </span>
           </div>
           <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs font-medium text-[#77756e]">
             <span className="flex items-center gap-2">
@@ -123,7 +120,7 @@ export default function HomePage() {
                 </p>
               </div>
               <span className="rounded-full bg-[#ef6848]/10 px-3 py-1.5 text-xs font-semibold text-[#c55338]">
-                Coming soon
+                Group planning
               </span>
             </div>
           </div>
@@ -140,14 +137,14 @@ export default function HomePage() {
         <div className="page-shell py-16 sm:py-20">
           <div className="max-w-xl">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ef6848]">
-              The idea
+              How it works
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.055em] sm:text-4xl">
               Less scrolling. More agreeing.
             </h2>
             <p className="mt-4 leading-7 text-[#68665f]">
-              The plan is simple: make choosing a stay feel easy, whether you
-              are planning solo or getting the whole group on the same page.
+              Choose a destination, share trip details, and let each person
+              swipe independently. The group can then compare the stays everyone likes.
             </p>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -169,28 +166,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="page-shell py-14 sm:py-20" id="coming-soon">
+      <section className="page-shell py-14 sm:py-20" id="about">
         <div className="flex flex-col gap-5 rounded-[2rem] bg-[#24231f] p-7 text-[#fffaf4] sm:flex-row sm:items-center sm:justify-between sm:p-10">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#f08b70]">
-              Early days
+              Data transparency
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-[-0.05em] sm:text-3xl">
-              StaySwipe is under development.
+              Clear choices, honest information.
             </h2>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-white/65">
-              Stay discovery is in development. Listings use OpenStreetMap community data where
-              available; coverage may be incomplete. Ratings, reviews, and prices are not verified,
-              and StaySwipe is not a booking service.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/65">
+              Listings use OpenStreetMap community data, whose coverage and details vary.
+              Ratings and reviews are not verified. Prices appear only when a configured provider
+              returns a matching offer; availability can change. StaySwipe is not a booking service.
             </p>
           </div>
-          <span className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-sm text-white/80">
-            <span
-              aria-hidden="true"
-              className="size-2 rounded-full bg-[#f08b70]"
-            />
-            Build in progress
-          </span>
+          <Link
+            className="inline-flex w-fit shrink-0 rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/50"
+            to="/discover"
+          >
+            Explore stays
+          </Link>
         </div>
       </section>
     </>

@@ -2,9 +2,14 @@ import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import { createServer } from 'node:http';
 import test from 'node:test';
-import { createHealthHandler } from '../src/controllers/healthController.js';
+import express from 'express';
+import {
+  createHealthHandler,
+  createReadinessHandler,
+} from '../src/controllers/healthController.js';
 import { errorHandler } from '../src/middleware/errorHandler.js';
 import { createRateLimit } from '../src/middleware/rateLimit.js';
+import { createHealthRouter } from '../src/routes/healthRoutes.js';
 import { httpError } from '../src/utils/httpError.js';
 import {
   registerGracefulShutdown,
@@ -59,6 +64,42 @@ test('health endpoint reports liveness and database readiness without infrastruc
   ready = true;
   health({}, response);
   assert.equal(response.body.database, 'ready');
+});
+
+test('readiness endpoint returns 503 until the database is ready', () => {
+  let ready = false;
+  const readiness = createReadinessHandler({ isDatabaseReady: () => ready });
+  const response = createResponse();
+
+  readiness({}, response);
+  assert.equal(response.statusCode, 503);
+  assert.deepEqual(response.body, { status: 'unavailable', database: 'unavailable' });
+
+  ready = true;
+  readiness({}, response);
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(response.body, { status: 'ready', database: 'ready' });
+});
+
+test('mounts a non-cacheable HTTP readiness endpoint', async () => {
+  const app = express();
+  app.use('/api/health', createHealthRouter({ isDatabaseReady: () => false }));
+  const server = createServer(app);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+
+  try {
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/api/health/ready`);
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    assert.deepEqual(await response.json(), {
+      status: 'unavailable',
+      database: 'unavailable',
+    });
+  } finally {
+    await new Promise((resolve, reject) => {
+      server.close((error) => error ? reject(error) : resolve());
+    });
+  }
 });
 
 test('rate limit permits normal swiping then blocks excess requests for the member', () => {

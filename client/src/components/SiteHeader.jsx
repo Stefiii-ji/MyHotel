@@ -52,9 +52,9 @@ export default function SiteHeader() {
         </Link>
         <Link
           className="hidden rounded-full border border-[#24231f]/15 px-4 py-2.5 text-sm font-semibold transition hover:border-[#24231f]/40 sm:inline-block sm:px-5"
-          to="/#coming-soon"
+          to="/#about"
         >
-          About
+          About StaySwipe
         </Link>
       </nav>
     </header>
