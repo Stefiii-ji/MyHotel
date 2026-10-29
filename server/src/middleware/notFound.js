@@ -1,5 +1,5 @@
+import { httpError } from '../utils/httpError.js';
+
 export function notFound(request, response, next) {
-  const error = new Error(`Route not found: ${request.method} ${request.originalUrl}`);
-  error.statusCode = 404;
-  next(error);
+  next(httpError(404, 'Route not found'));
 }

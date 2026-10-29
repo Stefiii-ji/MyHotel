@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "seed:development-hotels": "node scripts/seed-development-hotels.js",
+    "test": "node --test"
   },
   "dependencies": {
     "cors": "^2.8.5",
