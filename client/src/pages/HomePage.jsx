@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const steps = [
   {
@@ -15,9 +16,9 @@ const steps = [
   },
   {
     number: "03",
-    title: "Find the overlap",
+    title: "Plan together",
     description:
-      "Plan with friends and see the stays everyone in your group likes.",
+      "Share the destination, dates, and budget so everyone starts with the same trip plan.",
   },
 ];
 
@@ -45,13 +46,29 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="mt-7 max-w-[500px] text-base leading-7 text-[#68665f] sm:text-lg sm:leading-8">
-            Hotel hunting should feel less like homework. StaySwipe is being
-            built to help you discover stays around Mumbai and Navi Mumbai, then
-            find the ones your whole group loves.
+            Hotel hunting should feel less like homework. StaySwipe helps you
+            discover stays around Mumbai and Navi Mumbai and set trip details
+            together with your group.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a
+            <Link
               className="inline-flex items-center gap-3 rounded-full bg-[#3b3933] px-6 py-3.5 text-sm font-semibold text-[#fffaf4] transition-colors duration-200 hover:bg-[#514e46] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#514e46]"
+              to="/discover"
+            >
+              Explore available stays
+              <span aria-hidden="true" className="text-lg leading-none">
+                ↗
+              </span>
+            </Link>
+            <Link
+              className="inline-flex items-center gap-3 rounded-full border border-[#24231f]/15 px-5 py-3.5 text-sm font-semibold transition-colors duration-200 hover:border-[#24231f]/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#514e46]"
+              to="/groups/new"
+            >
+              Plan a group
+              <span aria-hidden="true" className="text-lg leading-none">↗</span>
+            </Link>
+            <a
+              className="inline-flex items-center gap-3 rounded-full border border-[#24231f]/15 px-5 py-3.5 text-sm font-semibold transition-colors duration-200 hover:border-[#24231f]/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#514e46]"
               href="#how-it-works"
             >
               See how it will work
@@ -112,8 +129,7 @@ export default function HomePage() {
           </div>
         </motion.div>
         <p className="sr-only">
-          Illustrative artwork only. StaySwipe does not have live hotel listings
-          yet.
+          Illustrative artwork only. Hotel records are retrieved from OpenStreetMap where available.
         </p>
       </section>
 
@@ -163,9 +179,9 @@ export default function HomePage() {
               StaySwipe is under development.
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-white/65">
-              Hotel discovery, swiping, and group matching are not available
-              yet. This page is a preview of what we are building, not a live
-              booking service.
+              Stay discovery is in development. Listings use OpenStreetMap community data where
+              available; coverage may be incomplete. Ratings, reviews, and prices are not verified,
+              and StaySwipe is not a booking service.
             </p>
           </div>
           <span className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-sm text-white/80">
